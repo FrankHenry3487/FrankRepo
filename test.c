@@ -5,5 +5,5 @@ int main()
 	//add 
 	char a[] = "Hellow world!";
 	printf("%s", a);
-	return 0;
+	return 1;
 }
