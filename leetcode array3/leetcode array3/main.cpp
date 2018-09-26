@@ -27,7 +27,7 @@ using namespace std;
 class Solution {
 public:
     int removeDuplicates(vector<int>& nums) {
-        int idx_r = 1, idx_w = 0;
+        int idx_r = 1, idx_w = 0, dup_cnt = 0;
         int len = (int)nums.size();
         if (0 == len) return 0;
         for (; idx_r < len; idx_r++)
@@ -35,7 +35,14 @@ public:
             if (nums[idx_r] != nums[idx_w])
             {
                 nums[++idx_w] = nums[idx_r];
+                dup_cnt = 0;
             }
+            else if (dup_cnt < 1)
+            {
+                nums[++idx_w] = nums[idx_r];
+                dup_cnt++;
+            }
+            else{}
         }
         return idx_w + 1;
     }
