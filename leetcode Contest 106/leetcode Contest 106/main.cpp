@@ -27,30 +27,32 @@ using namespace std;
 
 class Solution {
 public:
-    void swap(int& a, int& b)
-    {
-        int tmp = a;
-        a = b;
-        b = tmp;
-    }
-    vector<int> sortArrayByParityII(vector<int>& A) {
-        int i = 0, j = 1;
-        while (i < A.size() && j < A.size())
+    int minAddToMakeValid(string S) {
+        int cnt_tmp = 0;
+        int cnt = 0;
+        for (int i = 0; i < S.size(); i++)
         {
-            if (!(A[i] & 1))
-                i += 2;
-            else if (A[j] & 1)
-                j += 2;
-            else
-                swap(A[i], A[j]);
+            switch (S[i]) {
+            case '(':
+                if (cnt_tmp <= 0)
+                    cnt_tmp--;
+                else {
+                    cnt += cnt_tmp;
+                    cnt_tmp = -1;
+                }
+                break;
+                case ')':
+                    cnt_tmp++;
+                    break;
+            }
         }
-        return A;
+        return cnt + abs(cnt_tmp);
     }
 };
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    
-    cout << "Hello, World!\n";
+    Solution s;
+    cout << s.minAddToMakeValid("(((");
     return 0;
 }
