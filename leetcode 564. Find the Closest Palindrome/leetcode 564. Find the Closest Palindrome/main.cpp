@@ -29,7 +29,7 @@ class Solution {
 public:
     string nearestPalindromic(string n) {
         bool isPaliNum = true;
-        char last = 0;
+        long long ori = stoll(n);
         if (n[0] == '1' && n.size() > 1)
         {
             int i = 1;
@@ -63,7 +63,6 @@ public:
         int b = 0, e = (int)n.size() - 1;
         while (b < e - 1)
         {
-            last = n[e];
             if (n[b] != n[e])
             {
                 n[e] = n[b];
@@ -103,28 +102,75 @@ public:
         }
         else if (b != e)
         {
-            if (n[b] > n[e])
+            long long a1,a2,a3;
+            if (n[b] == '0')
             {
-                n[b] = (n[b] - n[e]) >= (10 + n[e] - n[b] + 1) ? (n[b] - 1) : n[b];
                 n[e] = n[b];
+                a1 = stoll(n);
+                n[e] = ++n[b];
+                a2 = stoll(n);
+                if (abs(a1 - ori) <= abs(a2 - ori))
+                    n[e] = --n[b];
             }
-            else if (n[b] < n[e])
+            else if (n[b] != '9')
             {
-                n[b] = (n[e] - n[b]) > (10 + n[b] + 1 - n[e]) ? (n[b] + 1) : n[b];
+                n[e] = --n[b];
+                a1 = stoll(n);
+                n[e] = ++n[b];
+                a2 = stoll(n);
+                n[e] = ++n[b];
+                a3 = stoll(n);
+                if (abs(a1 - ori) <= abs(a2 - ori) && abs(a1 - ori) <= abs(a3 - ori))
+                {
+                    --n[b];
+                    n[e] = --n[b];
+                }
+                else if (abs(a2 - ori) < abs(a1 - ori) && abs(a2 - ori) <= abs(a3 - ori))
+                {
+                    n[e] = --n[b];
+                }
+            }
+            else
+            {
                 n[e] = n[b];
+                a1 = stoll(n);
+                n[e] = --n[b];
+                a2 = stoll(n);
+                if (abs(a2 - ori) > abs(a1 - ori))
+                    n[e] = ++n[b];
             }
         }
         else
         {
-            if (last < n[e - 1])
+            long long a1,a2,a3;
+            if (n[b] == '0')
             {
-                if (n[e] != '0')
-                    n[e] = (n[e - 1] - last) >= 5 ? n[e] - 1 : n[e];
+                a1 = stoll(n);
+                n[b]++;
+                a2 = stoll(n);
+                if (abs(a2 - ori) >= abs(a1 - ori))
+                    n[b]--;
             }
-            else if (last > n[e - 1])
+            else if (n[b] == '9')
             {
-                if (n[e] != '9')
-                    n[e] = (last - n[e - 1]) > 5 ? n[e] + 1 : n[e];
+                a1 = stoll(n);
+                n[b]--;
+                a2 = stoll(n);
+                if (abs(a2 - ori) > abs(a1 - ori))
+                    n[b]++;
+            }
+            else
+            {
+                n[b]--;
+                a1 = stoll(n);
+                n[b]++;
+                a2 = stoll(n);
+                n[b]++;
+                a3 = stoll(n);
+                if (abs(a1 - ori) <= abs(a2 - ori) && abs(a1 - ori) <= abs(a3 - ori))
+                    n[b] -= 2;
+                else if (abs(a2 - ori) < abs(a1 - ori) && abs(a2 - ori) <= abs(a3 - ori))
+                    n[b]--;
             }
         }
         return n;
@@ -134,6 +180,6 @@ public:
 int main(int argc, const char * argv[]) {
     // insert code here...
     Solution s;
-    cout << s.nearestPalindromic("1837722381");
+    cout << s.nearestPalindromic("123892133");
     return 0;
 }
