@@ -28,43 +28,59 @@ using namespace std;
 
 class Solution {
 public:
-    int numUniqueEmails(vector<string>& emails) {
-        unordered_set<string> s;
-        bool is_plus;
-        string tmp;
-        for (auto& email : emails)
+    int numSubarraysWithSum(vector<int>& A, int S) {
+        vector<int> aidx;
+        for (int i = 0; i < A.size(); i++)
+            if (A[i] == 1)
+                aidx.push_back(i);
+        if (S > 0)
         {
-            tmp.clear();
-            is_plus = false;
-            for (int i = 0; i < email.size(); i++)
+            int f = 0, e = S - 1, res = 0, cnt1 = 0, cnt2 = 0;
+            while (e < aidx.size())
             {
-                switch(email[i])
-                {
-                    case '.':
-                        break;
-                    case '+':
-                        is_plus = true;
-                        break;
-                    case '@':
-                        tmp += email.substr(i + 1);
-                        break;
-                    default:
-                        if (is_plus)
-                            break;
-                        else
-                            tmp += email[i];
-                        break;
-                }
+                if (f != 0)
+                    cnt1 = aidx[f] - aidx[f - 1];
+                else
+                    cnt1 = aidx[0] + 1;
+                if (e != aidx.size() - 1)
+                    cnt2 = aidx[e + 1] - aidx[e];
+                else
+                    cnt2 = (int)A.size() - aidx[e];
+                res += cnt1 * cnt2;
+                f++;
+                e++;
             }
-            if (s.end() == s.find(tmp))
-                s.insert(tmp);
+            return res;
         }
-        return (int)s.size();
+        else
+        {
+            int res = 0, zn;
+            for (int i = 1; i < aidx.size(); i++)
+            {
+                zn = aidx[i] - aidx[i - 1] - 1;
+                res += (1 + zn) * zn / 2;
+            }
+            if (aidx.size() > 0)
+            {
+                zn = aidx[0];
+                res += (1 + zn) * zn / 2;
+                zn = (int)A.size() - aidx[aidx.size() - 1] - 1;
+                res += (1 + zn) * zn / 2;
+            }
+            else
+            {
+                return ((int)A.size() + 1) * (int)A.size() / 2;
+            }
+            return res;
+        }
     }
 };
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    cout << "Hello, World!\n";
+    vector<int> a = {0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0};
+    Solution s;
+    
+    cout << s.numSubarraysWithSum(a, 3);
     return 0;
 }
