@@ -25,29 +25,93 @@
 
 using namespace std;
 
-class RecentCounter {
-    set<int> s;
+class Solution {
 public:
-    RecentCounter() {
-        
-    }
-    
-    int ping(int t) {
-        int res = 0;
-        s.insert(t);
-        set<int>::iterator a = s.lower_bound(t - 3000);
-        set<int>::iterator b = s.upper_bound(t);
-        while(a != b)
+    int shortestBridge(vector<vector<int>>& A) {
+        bool is_found = false, is_over = false;
+        vector<vector<int>> cp(A);
+        int res = 3;
+        while(!is_over)
         {
-            res++;
-            a++;
+            is_over = true;
+            for (int i = 0; i < A.size(); i++)
+                for (int j = 0; j < A.size(); j++)
+                {
+                    if ((A[i][j] == 1 && !is_found) || A[i][j] == 2)
+                    {
+                        A[i][j] = 2;
+                        is_found = true;
+                        if (i > 0 && A[i - 1][j] == 1)
+                        {
+                            A[i - 1][j] = 2;
+                            is_over = false;
+                        }
+                        if (i < A.size() - 1 && A[i + 1][j] == 1)
+                        {
+                            A[i + 1][j] = 2;
+                            is_over = false;
+                        }
+                        if (j > 0 && A[i][j - 1] == 1)
+                        {
+                            A[i][j - 1] = 2;
+                            is_over = false;
+                        }
+                        if (j < A.size() - 1 && A[i][j + 1] == 1)
+                        {
+                            A[i][j + 1] = 2;
+                            is_over = false;
+                        }
+                    }
+                }
         }
-        return res;
+        while(1)
+        {
+            for (int i = 0; i < A.size(); i++)
+                for (int j = 0; j < A.size(); j++)
+                {
+                    if (A[i][j] == res - 1)
+                    {
+                        cp[i][j] = res;
+                        if (i > 0)
+                        {
+                            if (A[i - 1][j] != 1)
+                                cp[i - 1][j] = res;
+                            else
+                                return res - 3;
+                        }
+                        if (i < A.size() - 1)
+                        {
+                            if (A[i + 1][j] != 1)
+                                cp[i + 1][j] = res;
+                            else
+                                return res - 3;
+                        }
+                        if (j > 0)
+                        {
+                            if (A[i][j - 1] != 1)
+                                cp[i][j - 1] = res;
+                            else
+                                return res - 3;
+                        }
+                            
+                        if (j < A.size() - 1)
+                        {
+                            if (A[i][j + 1] != 1)
+                                cp[i][j + 1] = res;
+                            else
+                                return res - 3;
+                        }
+                    }
+                }
+            A.assign(cp.begin(), cp.end());
+            res++;
+        }
     }
 };
 
 int main(int argc, const char * argv[]) {
     Solution s;
-    cout << "Hello, World!\n";
+    vector<vector<int>> A = {{0,0,0,1,0,0,0,1},{0,0,0,1,1,0,1,1},{0,1,1,1,0,0,1,1},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0}};
+    cout << s.shortestBridge(A);
     return 0;
 }
